@@ -1,0 +1,56 @@
+study_activity_id,study_title,parl_session,reason
+13054147,"Subject Matter of Supplementary Estimates (B), 2024-25",44-1,starts_with:Subject Matter of
+12774925,"Bill C-368, An Act to amend the Food and Drugs Act (natural health products)",44-1,contains:Bill C-
+12823004,"Bill C-277, An Act to establish a national strategy on brain injuries",44-1,contains:Bill C-
+12815198,"Subject Matter of Supplementary Estimates (A), 2024-25",44-1,starts_with:Subject Matter of
+12729090,"Bill C-64, An Act respecting pharmacare",44-1,contains:Bill C-
+12626014,"Subject Matter of Supplementary Estimates (C), 2023-24",44-1,starts_with:Subject Matter of
+12580060,Subject Matter of Bill C-62,44-1,starts_with:Subject Matter of
+12050235,"Bill C-293, An Act respecting pandemic prevention and preparedness",44-1,contains:Bill C-
+12273630,"Bill C-284, An Act to establish a national strategy for eye care",44-1,contains:Bill C-
+11825729,"Bill C-252, An Act to amend the Food and Drugs Act (prohibition of food and beverage marketing directed at children)",44-1,contains:Bill C-
+12070045,Main Estimates 2023-24,44-1,starts_with:Main Estimates
+12085060,Departmental Plan 2023-24 of the Department of Health,44-1,starts_with:Departmental Plan
+12085061,Departmental Plan 2023-24 of the Canadian Food Inspection Agency,44-1,starts_with:Departmental Plan
+12085063,Departmental Plan 2023-24 of the Canadian Institutes of Health Research,44-1,starts_with:Departmental Plan
+12085064,Departmental Plan 2023-24 of the Public Health Agency of Canada,44-1,starts_with:Departmental Plan
+12090068,"Subject Matter of Supplementary Estimates (C), 2022-23",44-1,starts_with:Subject Matter of
+11971482,"Bill S-203, An Act respecting a federal framework on autism spectrum disorder",44-1,contains:Bill S-
+11788191,"Bill C-224, An Act to establish a national framework for the prevention and treatment of cancers linked to firefighting",44-1,contains:Bill C-
+11927957,"Supplementary Estimates (B), 2022-23",44-1,starts_with:Supplementary Estimates
+11860438,"Bill C-31, An Act respecting cost of living relief measures related to dental care and rental housing",44-1,contains:Bill C-
+11729719,"Subject Matter of Supplementary Estimates (A), 2022-23",44-1,starts_with:Subject Matter of
+11552173,"Supplementary Estimates (C), 2021-22",44-1,starts_with:Supplementary Estimates
+11552214,Main Estimates 2022-23,44-1,starts_with:Main Estimates
+11555076,Departmental Plan 2022-23 of the Canadian Food Inspection Agency,44-1,starts_with:Departmental Plan
+11555101,Departmental Plan 2022-23 of the Canadian Institutes of Health Research,44-1,starts_with:Departmental Plan
+11555146,Departmental Plan 2022-23 of the Department of Health,44-1,starts_with:Departmental Plan
+11555225,Departmental Plan 2022-23 of the Public Health Agency of Canada,44-1,starts_with:Departmental Plan
+11422107,Committee Business,44-1,starts_with:Committee Business
+12525641,Meeting Requested Pursuant to Standing Order 106(4),44-1,starts_with:Meeting Requested Pursuant to Standing Order
+12421239,Meeting Requested Pursuant to Standing Order 106(4),44-1,starts_with:Meeting Requested Pursuant to Standing Order
+12358323,Briefing by the Minister of Health and Minister of Mental Health and Addictions,44-1,starts_with:Briefing by
+12327350,Briefing on Natural Health Products Regulations,44-1,starts_with:Briefing on
+11422106,Election of Vice-Chairs,44-1,starts_with:Election of
+11724310,Briefing on Labour Shortages in the Health Care Sector,44-1,starts_with:Briefing on
+11724268,Briefing on Mental Health and Addictions in Canada,44-1,starts_with:Briefing on
+11470511,Meeting Requested by Four Members of the Committee,44-1,starts_with:Meeting Requested by
+11422105,Election of Chair,44-1,starts_with:Election of
+13397598,"Bill C-224, An Act to amend the Food and Drugs Act (natural health products)",45-1,contains:Bill C-
+13361756,"Supplementary Estimates (C), 2025-26",45-1,starts_with:Supplementary Estimates
+13309270,"Bill C-234, An Act respecting the establishment and award of a Living Donor Recognition Medal",45-1,contains:Bill C-
+13311762,Subject Matter of Clauses 400 to 456 (Division 25) of Bill C-15,45-1,starts_with:Subject Matter of
+13296809,"Subject Matter of Supplementary Estimates (B), 2025-26",45-1,starts_with:Subject Matter of
+13535789,Meeting Requested Pursuant to Standing Order 106(4),45-1,starts_with:Meeting Requested Pursuant to Standing Order
+13566099,Meeting Requested Pursuant to Standing Order 106(4),45-1,starts_with:Meeting Requested Pursuant to Standing Order
+13577228,Meeting Requested Pursuant to Standing Order 106(4),45-1,starts_with:Meeting Requested Pursuant to Standing Order
+13450453,Briefing on PrescribeIT,45-1,starts_with:Briefing on
+13084168,Election of Chair,45-1,starts_with:Election of
+13084197,Committee Business,45-1,starts_with:Committee Business
+13470402,Meeting Requested Pursuant to Standing Order 106(4),45-1,starts_with:Meeting Requested Pursuant to Standing Order
+13431209,Meeting Requested Pursuant to Standing Order 106(4),45-1,starts_with:Meeting Requested Pursuant to Standing Order
+13334157,Briefing on the National Emergency Strategic Stockpile (NESS),45-1,starts_with:Briefing on
+13084191,Election of Vice-Chairs,45-1,starts_with:Election of
+13141163,Briefing by the Minister of Health on her Mandate Letter,45-1,starts_with:Briefing by
+13145147,Briefing by the President of Public Health Agency of Canada,45-1,starts_with:Briefing by
+13146577,Briefing by the Department of Health Officials,45-1,starts_with:Briefing by

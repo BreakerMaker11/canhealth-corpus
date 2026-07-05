@@ -1,0 +1,147 @@
+# topic_rules.yaml — weak-labeling rules for topic_seed
+#
+# How it's applied (implement in clean/build_corpus.py):
+#   1. Match against: study_or_consultation_title first, then document title,
+#      then card_text — all lowercased.
+#   2. Keywords are case-insensitive substrings unless prefixed with "re:",
+#      which marks a regex.
+#   3. Rules are evaluated top to bottom; FIRST match wins (order = precedence,
+#      so put the most specific topics first).
+#   4. No match => topic_seed: unlabeled  (excluded from training; candidates
+#      for hand-labeling or taxonomy revision).
+#   5. These produce label_source=weak labels ONLY. Gold labels are always
+#      hand-made and never touched by this file.
+#
+# Iterate using qa_report.py: watch per-topic counts, the unlabeled fraction
+# (aim < 15%), and spot-check 5 random docs per topic after every change.
+
+topics:
+  - code: indigenous_health
+    name: Indigenous health
+    keywords:
+      - indigenous
+      - first nations
+      - inuit
+      - "re:\\bmétis|\\bmetis\\b"
+      - jordan's principle
+      - non-insured health benefits
+
+  - code: womens_health
+    name: Women's and reproductive health
+    keywords:
+      - women's health
+      - womens health
+      - reproductive health
+      - maternal health
+      - breast cancer
+      - cervical cancer
+      - menopause
+      - endometriosis
+      - contraception
+      - midwifery
+
+  - code: mental_health
+    name: Mental health and substance use
+    keywords:
+      - mental health
+      - mental illness
+      - substance use
+      - addiction
+      - opioid
+      - overdose
+      - suicide prevention
+
+  - code: public_health
+    name: Public health and pandemic preparedness
+    keywords:
+      - public health
+      - pandemic
+      - epidemic
+      - "re:\\bcovid"
+      - pandemic preparedness
+      - emergency preparedness
+      - infectious disease
+      - antimicrobial
+      - communicable disease
+      - outbreak
+      - "re:\\bvaccin"
+      - immunization
+      - immunisation
+      - disease surveillance
+
+  - code: pharmacare
+    name: Pharmacare, drugs and medical devices
+    keywords:
+      - pharmacare
+      - pharmaceutical
+      - prescription drug
+      - drug coverage
+      - drug pricing
+      - patented medicine
+      - drug shortage
+      - formulary
+      - rare disease drug
+      - biosimilar
+      - medical device
+      - drug approval
+      - drug safety
+
+  - code: digital_health
+    name: Digital health and AI
+    keywords:
+      - digital health
+      - virtual care
+      - telehealth
+      - telemedicine
+      - electronic health record
+      - health data
+      - interoperability
+      - artificial intelligence
+      - "re:\\bAI\\b"
+
+  - code: workforce
+    name: Health workforce
+    keywords:
+      - workforce
+      - physician shortage
+      - nurse shortage
+      - nursing shortage
+      - health human resources
+      - retention and recruitment
+      - credential recognition
+      - internationally educated
+      - burnout
+      - scope of practice
+
+  - code: wait_times
+    name: Wait times and surgical backlog
+    keywords:
+      - wait time
+      - wait-list
+      - waitlist
+      - surgical backlog
+      - diagnostic backlog
+      - emergency department overcrowding
+
+  - code: funding
+    name: Funding and health transfers
+    keywords:
+      - canada health transfer
+      - health funding
+      - health spending
+      - health budget
+      - fiscal sustainability
+      - "re:\\bfund(ing)? (of|for) health"
+
+  - code: primary_care
+    name: Primary care access
+    keywords:
+      - primary care
+      - family physician
+      - family doctor
+      - family medicine
+      - attachment to a provider
+      - walk-in clinic
+      - team-based care
+
+fallback: unlabeled
