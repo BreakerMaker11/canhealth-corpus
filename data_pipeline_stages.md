@@ -59,6 +59,14 @@ line-breaks, ligatures, whitespace; drop ToC and "About <org>" boilerplate;
 drop docs under ~150 words. Create `text_org_masked`: submitting-org name and
 letterhead replaced with [ORG] (prevents label leakage for stakeholder-type
 classification).
+- Contact scrubbing: replace emails, phone numbers, and postal addresses in
+  text with [CONTACT]; strip trailing signature blocks (from a final
+  "Sincerely,"/"Respectfully submitted,"/"Yours truly," to end of doc).
+  Names in manifest metadata are kept; only in-text contact clutter is removed.
+- Layout-mangled detection: if the fraction of lines under 4 words AND digit
+  density are both high (tune thresholds on the 988-hotline brief as the
+  known-positive), set layout_mangled=true in the manifest and report these
+  in QA — flag, do not attempt to fix or auto-drop.
 
 ## Stage 5 — Structure and weak-label
 Write `data/processed/corpus.csv`, one row per document:
