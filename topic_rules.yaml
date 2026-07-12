@@ -144,4 +144,32 @@ topics:
       - walk-in clinic
       - team-based care
 
+  - code: childrens_health
+    name: Children's and paediatric health
+    keywords:
+      - children's health
+      - childrens health
+      - "re:\\bpaediatric|\\bpediatric"
+      - child health
+      - "re:\\bneonatal"
+      - "re:\\binfant health"
+
+  - code: cancer
+    name: Cancer prevention and treatment
+    keywords:
+      - cancer prevention
+      - cancer treatment
+      - cancer care
+      - oncology
+      - "re:\\bchemo"
+      - radiation therapy
+      - cancer screening
+
 fallback: unlabeled
+
+# Studies where the study title is too broad to assign a topic directly.
+# For these, keyword matching falls through to the brief's own text.
+title_exempt_studies:
+  - "Emergency Situation Facing Canadians in Light of the COVID-19 Pandemic"
+  - "Impact of Immigration Policy on Healthcare and Barriers to Integrating Internationally Trained Professionals"
+  - "Children's Health"
