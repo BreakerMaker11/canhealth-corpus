@@ -1,0 +1,427 @@
+
+
+
+
+
+
+<div class="briefs-list-filter-container">
+
+    <form class="form-inline">
+        <div class="form-group search-form-group">
+            <div class="input-group">
+                <input type="text" id="FilterSearchTextBox" class="form-control" placeholder="Search Briefs by Name">
+                <div id="ClearFilter" class="clear-filter hoc-icon icon-times-circle"></div>
+                <div class="input-group-addon" style="padding:0"><button type="button" id="FilterSearchButton" class="btn btn-sm" title="Filter Results"><i class="hoc-icon icon-search"></i></button></div>
+            </div>
+        </div>
+        <div class="form-group view-form-group">
+            <div id="ViewOptionDropDown" class="dropdown view-options">
+                <div class="dropdown-toggle" id="view-dropdown" data-toggle="dropdown" >
+                    <a href="#"><span id="ViewTitle">Sort Chronologically</span> &nbsp;<i class="ion-android-arrow-dropdown" style="font-size: 16px;"></i></a>
+                </div>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="view-dropdown">
+                    <li role="presentation" id="ViewOptionChronologicalItem" class=" active">
+                        <a role="menuitem" id="ViewOptionChronological" tabindex="-1">Sort Chronologically</a>
+                    </li>
+                    <li role="presentation" id="ViewOptionAlphabeticalItem" class="">
+                        <a role="menuitem" id="ViewOptionAlphabetical" tabindex="-1">Sort Alphabetically</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <img id="BriefsListContainerSpinner" class="hidden" src="/committees/Styles/images/spin_small.gif" alt="Loading" />
+    </form>
+
+</div>
+
+
+    <script language="javascript" type="text/javascript">
+
+        $(document).on("keypress", "input", function (e) {
+            var code = e.keyCode || e.which;
+            if (code == 13) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        $(document).ready(function () {
+
+            $("#FilterSearchTextBox").keyup(function () {
+                $(this).next().toggle(Boolean($(this).val()));
+            });
+
+            $("#ClearFilter").toggle(
+                Boolean($("#FilterSearchTextBox").val())
+            );
+
+            $("#ClearFilter").click(function () {
+                
+                $("#FilterSearchTextBox").val('');
+                FilterBriefs($('#FilterSearchTextBox').val())
+
+                //$(this).prev().val('').focus();
+                $(this).hide();
+            });
+
+        });
+
+        $("#FilterSearchButton").on("click", function () {
+                        
+            FilterBriefs($('#FilterSearchTextBox').val())
+        });
+        
+        $("#FilterSearchTextBox").keyup(function (e) {
+
+            setTimeout(function () {
+
+                if ($("#FilterSearchTextBox").val().length > 0) {
+                    FilterBriefs($('#FilterSearchTextBox').val())
+                } else {
+                    ClearFilter()
+                }
+            }, 1);
+        });
+
+        function FilterBriefs(filterText) {
+            
+            filterText = removeAccents(filterText.toLocaleLowerCase());
+            
+            var items = $('.brief-item');
+
+            $('#BriefsListContainerResultsMessage').html('');
+            items.hide();
+
+            var filteredItems = items.filter(function () {
+                return (removeAccents($(this).find('.name').text().toLowerCase()).indexOf(filterText, 0) != -1 ||
+                        removeAccents($(this).find('.joint-name').text().toLowerCase()).indexOf(filterText, 0) != -1 ||
+                        removeAccents($(this).find('.joint').text().toLowerCase()).indexOf(filterText, 0) != -1);
+            });
+
+            filteredItems.show();
+
+            if (filteredItems.length == 0){
+                $('#BriefsListContainerResultsMessage').html('No results found')
+            }
+
+            var filteredJointSubmitters = filteredItems.find('.joint-name');
+
+            filteredJointSubmitters
+                .hide()
+                .filter(function () {
+                    return ($(this).text().toLowerCase().indexOf(filterText, 0) != -1);
+                })
+                .show();
+        }
+
+        function ClearFilter(filterText) {
+            var items = $('.brief-item');
+            items.show()
+        }
+      
+        function removeAccents(name) {
+
+            name = name.replace(/À|Á|Â|Ã|Ä|Å/g, "A");
+            name = name.replace(/à|á|â|ã|ä|å/g, "a");
+            name = name.replace(/Ò|Ó|Ô|Õ|Õ|Ö|Ø/g, "O");
+            name = name.replace(/ò|ó|ô|õ|ö|ø/g, "o");
+            name = name.replace(/È|É|Ê|Ë/g, "E");
+            name = name.replace(/è|é|ê|ë/g, "e");
+            name = name.replace(/Ç|ç/g, "c");
+            name = name.replace(/Ì|Í|Î|Ï/g, "I");
+            name = name.replace(/ì|í|î|ï/g, "i");
+            name = name.replace(/Ù|Ú|Û|Ü/g, "U");
+            name = name.replace(/ù|ú|û|ü/g, "u");
+            return name;
+        }
+
+        $("#ViewOptionChronological").on("click", function () {
+            
+            document.getElementById('ViewTitle').innerHTML = 'Sort Chronologically';
+
+            $('#BriefsListContainerSpinner').removeClass("hidden");
+            //$('#BriefsListContainer').html('');
+            
+            $('#ViewOptionChronologicalItem').addClass("active");
+            $('#ViewOptionAlphabeticalItem').removeClass("active");
+
+            var a = "/committees/en/HESA/StudyActivity/GetBriefs?studyActivityId=11516538&includeFilters=False&view=Chronologically";
+
+            $.ajax({
+                url: a,
+                type: 'GET',
+                dataType: 'html',
+                // we set cache: false because GET requests are often cached by browsers
+                // IE is particularly aggressive in that respect
+                cache: false,
+                data: {},
+                success: function displayResults(results) {
+
+                    $('#BriefsListContainerSpinner').addClass("hidden");
+                    $('#BriefsListContainer').html(results);
+
+                    if ($('#FilterSearchTextBox').val() != '')
+                        FilterBriefs($('#FilterSearchTextBox').val())
+                }
+            });
+        });
+
+        $("#ViewOptionAlphabetical").on("click", function () {
+
+            document.getElementById('ViewTitle').innerHTML = 'Sort Alphabetically';
+
+            $('#BriefsListContainerSpinner').removeClass("hidden");
+            //$('#BriefsListContainer').html('');
+
+            $('#ViewOptionChronologicalItem').removeClass("active");
+            $('#ViewOptionAlphabeticalItem').addClass("active");
+
+            var a = "/committees/en/HESA/StudyActivity/GetBriefs?studyActivityId=11516538&includeFilters=False&view=Alphabetically";
+            
+            $.ajax({
+                url: a,
+                type: 'GET',
+                dataType: 'html',
+                // we set cache: false because GET requests are often cached by browsers
+                // IE is particularly aggressive in that respect
+                cache: false,
+                data: {},
+                success: function displayResults(results) {
+
+                    $('#BriefsListContainerSpinner').addClass("hidden");
+                    $('#BriefsListContainer').html(results);
+
+                    if ($('#FilterSearchTextBox').val() != '')
+                        FilterBriefs($('#FilterSearchTextBox').val())
+                }
+            });
+        });
+
+</script>
+
+
+
+
+<div id="BriefsListContainerResultsMessage"></div>
+<div id="BriefsListContainer">
+    
+    
+
+
+
+
+
+<div class="brief-item">
+    <div class="name">Canadian Dental Association<a class="witness-meetings-link" href="/committees/en/WitnessMeetings?organizationId=3349" title="Committee meetings attended by Canadian Dental Association as an individual"><i class="hoc-icon icon-calendar"></i></a></div>
+    <a class="btn btn-brief" href="//www.ourcommons.ca/Content/Committee/441/HESA/Brief/BR11756381/br-external/CanadianDentalAssociation-e.pdf" title="Study brief submitted by Canadian Dental Association"><i class="hoc-icon icon-notepad"></i>Brief (PDF)</a>
+    
+  <div class="published">Published on: Monday, May 9, 2022 at 8:05 a.m. (EDT)</div>
+</div>
+
+
+<div class="brief-item">
+    <div class="name">Canadian Centre on Substance Use and Addiction<a class="witness-meetings-link" href="/committees/en/WitnessMeetings?organizationId=552" title="Committee meetings attended by Canadian Centre on Substance Use and Addiction as an individual"><i class="hoc-icon icon-calendar"></i></a></div>
+    <a class="btn btn-brief" href="//www.ourcommons.ca/Content/Committee/441/HESA/Brief/BR11752725/br-external/CanadianCentreOnSubstanceUseAndAddiction-e.pdf" title="Study brief submitted by Canadian Centre on Substance Use and Addiction"><i class="hoc-icon icon-notepad"></i>Brief (PDF)</a>
+    
+  <div class="published">Published on: Thursday, May 5, 2022 at 3:18 p.m. (EDT)</div>
+</div>
+
+
+<div class="brief-item">
+    <div class="name">Canadian Dental Hygienists Association<a class="witness-meetings-link" href="/committees/en/WitnessMeetings?organizationId=3338" title="Committee meetings attended by Canadian Dental Hygienists Association as an individual"><i class="hoc-icon icon-calendar"></i></a></div>
+    <a class="btn btn-brief" href="//www.ourcommons.ca/Content/Committee/441/HESA/Brief/BR11741959/br-external/CanadianDentalHygienistsAssociation-e.pdf" title="Study brief submitted by Canadian Dental Hygienists Association"><i class="hoc-icon icon-notepad"></i>Brief (PDF)</a>
+    
+  <div class="published">Published on: Tuesday, May 3, 2022 at 12:12 p.m. (EDT)</div>
+</div>
+
+
+<div class="brief-item">
+    <div class="name">F&#233;d&#233;ration des m&#233;decins omnipraticiens du Qu&#233;bec<a class="witness-meetings-link" href="/committees/en/WitnessMeetings?organizationId=27596" title="Committee meetings attended by F&#233;d&#233;ration des m&#233;decins omnipraticiens du Qu&#233;bec as an individual"><i class="hoc-icon icon-calendar"></i></a></div>
+      <div class="appeared">Appeared:
+            <span>Monday, April 25, 2022</span>                        <a class="witness-testimony-link" href="/committees/en/Redirects/EvidenceForWitness?ParliamentNumber=44&amp;SessionNumber=1&amp;CommitteeAcronym=HESA&amp;IsJointCommittee=False&amp;MeetingNumber=17&amp;evidencePublicationId=11717612&amp;organizationId=27596" title="Transcript of testimony for F&#233;d&#233;ration des m&#233;decins omnipraticiens du Qu&#233;bec"><i class="hoc-icon icon-microphone"></i></a>
+      </div>
+    <a class="btn btn-brief" href="//www.ourcommons.ca/Content/Committee/441/HESA/Brief/BR11724969/br-external/FederationDesMedecinsOmnipraticiensDuQuebec-10604888-e.pdf" title="Study brief submitted by F&#233;d&#233;ration des m&#233;decins omnipraticiens du Qu&#233;bec"><i class="hoc-icon icon-notepad"></i>Brief (PDF)</a>
+    
+  <div class="published">Published on: Wednesday, April 27, 2022 at 4:53 p.m. (EDT)</div>
+</div>
+
+
+<div class="brief-item">
+    <div class="joint">Briefs submitted jointly by:</div>
+    <ul>
+    <li class="joint-name">Canadian Medical Association<a class="witness-meetings-link" href="/committees/en/WitnessMeetings?organizationId=462" title="Committee meetings attended by Canadian Medical Association as an individual"><i class="hoc-icon icon-calendar"></i></a>
+      <div class="appeared">Appeared:
+               <span>Wednesday, February 16, 2022<a class="witness-testimony-link" href="/committees/en/Redirects/EvidenceForWitness?ParliamentNumber=44&amp;SessionNumber=1&amp;CommitteeAcronym=HESA&amp;IsJointCommittee=False&amp;MeetingNumber=8&amp;evidencePublicationId=11584344&amp;organizationId=462" title="Transcript of testimony for Canadian Medical Association"><i class="hoc-icon icon-microphone"></i></a> </span>
+               <span>Monday, May 9, 2022<a class="witness-testimony-link" href="/committees/en/Redirects/EvidenceForWitness?ParliamentNumber=44&amp;SessionNumber=1&amp;CommitteeAcronym=HESA&amp;IsJointCommittee=False&amp;MeetingNumber=20&amp;evidencePublicationId=11766082&amp;organizationId=462" title="Transcript of testimony for Canadian Medical Association"><i class="hoc-icon icon-microphone"></i></a> </span>
+      </div>
+    </li>
+    <li class="joint-name">Canadian Nurses Association<a class="witness-meetings-link" href="/committees/en/WitnessMeetings?organizationId=1990" title="Committee meetings attended by Canadian Nurses Association as an individual"><i class="hoc-icon icon-calendar"></i></a>
+      <div class="appeared">Appeared:
+               <span>Wednesday, March 2, 2022<a class="witness-testimony-link" href="/committees/en/Redirects/EvidenceForWitness?ParliamentNumber=44&amp;SessionNumber=1&amp;CommitteeAcronym=HESA&amp;IsJointCommittee=False&amp;MeetingNumber=10&amp;evidencePublicationId=11618174&amp;organizationId=1990" title="Transcript of testimony for Canadian Nurses Association"><i class="hoc-icon icon-microphone"></i></a> </span>
+               <span>Wednesday, March 2, 2022<a class="witness-testimony-link" href="/committees/en/Redirects/EvidenceForWitness?ParliamentNumber=44&amp;SessionNumber=1&amp;CommitteeAcronym=HESA&amp;IsJointCommittee=False&amp;MeetingNumber=10&amp;evidencePublicationId=11618174&amp;organizationId=1990" title="Transcript of testimony for Canadian Nurses Association"><i class="hoc-icon icon-microphone"></i></a> </span>
+               <span>Monday, May 9, 2022<a class="witness-testimony-link" href="/committees/en/Redirects/EvidenceForWitness?ParliamentNumber=44&amp;SessionNumber=1&amp;CommitteeAcronym=HESA&amp;IsJointCommittee=False&amp;MeetingNumber=20&amp;evidencePublicationId=11766082&amp;organizationId=1990" title="Transcript of testimony for Canadian Nurses Association"><i class="hoc-icon icon-microphone"></i></a> </span>
+      </div>
+    </li>
+    <li class="joint-name">College of Family Physicians of Canada<a class="witness-meetings-link" href="/committees/en/WitnessMeetings?organizationId=477" title="Committee meetings attended by College of Family Physicians of Canada as an individual"><i class="hoc-icon icon-calendar"></i></a>
+      <div class="appeared">Appeared:
+               <span>Monday, April 4, 2022<a class="witness-testimony-link" href="/committees/en/Redirects/EvidenceForWitness?ParliamentNumber=44&amp;SessionNumber=1&amp;CommitteeAcronym=HESA&amp;IsJointCommittee=False&amp;MeetingNumber=15&amp;evidencePublicationId=11687005&amp;organizationId=477" title="Transcript of testimony for College of Family Physicians of Canada"><i class="hoc-icon icon-microphone"></i></a> </span>
+               <span>Monday, April 4, 2022<a class="witness-testimony-link" href="/committees/en/Redirects/EvidenceForWitness?ParliamentNumber=44&amp;SessionNumber=1&amp;CommitteeAcronym=HESA&amp;IsJointCommittee=False&amp;MeetingNumber=15&amp;evidencePublicationId=11687005&amp;organizationId=477" title="Transcript of testimony for College of Family Physicians of Canada"><i class="hoc-icon icon-microphone"></i></a> </span>
+               <span>Monday, May 9, 2022<a class="witness-testimony-link" href="/committees/en/Redirects/EvidenceForWitness?ParliamentNumber=44&amp;SessionNumber=1&amp;CommitteeAcronym=HESA&amp;IsJointCommittee=False&amp;MeetingNumber=20&amp;evidencePublicationId=11766082&amp;organizationId=477" title="Transcript of testimony for College of Family Physicians of Canada"><i class="hoc-icon icon-microphone"></i></a> </span>
+               <span>Monday, May 9, 2022<a class="witness-testimony-link" href="/committees/en/Redirects/EvidenceForWitness?ParliamentNumber=44&amp;SessionNumber=1&amp;CommitteeAcronym=HESA&amp;IsJointCommittee=False&amp;MeetingNumber=20&amp;evidencePublicationId=11766082&amp;organizationId=477" title="Transcript of testimony for College of Family Physicians of Canada"><i class="hoc-icon icon-microphone"></i></a> </span>
+      </div>
+    </li>
+    </ul>
+    <a class="btn btn-brief" href="//www.ourcommons.ca/Content/Committee/441/HESA/Brief/BR11714044/br-external/Jointly1-e.pdf" title="Jointly submitted study brief pdf document"><i class="hoc-icon icon-notepad"></i>Brief (PDF)</a>
+    
+  <div class="published">Published on: Friday, April 22, 2022 at 8:16 a.m. (EDT)</div>
+</div>
+
+
+<div class="brief-item">
+    <div class="name">Canadian Dental Assistants&#39; Association<a class="witness-meetings-link" href="/committees/en/WitnessMeetings?organizationId=27587" title="Committee meetings attended by Canadian Dental Assistants&#39; Association as an individual"><i class="hoc-icon icon-calendar"></i></a></div>
+    <a class="btn btn-brief" href="//www.ourcommons.ca/Content/Committee/441/HESA/Brief/BR11714043/br-external/CanadianDentalAssistantsAssociation-e.pdf" title="Study brief submitted by Canadian Dental Assistants&#39; Association"><i class="hoc-icon icon-notepad"></i>Brief (PDF)</a>
+    
+  <div class="published">Published on: Friday, April 22, 2022 at 8:11 a.m. (EDT)</div>
+</div>
+
+
+<div class="brief-item">
+    <div class="name">Medical Laboratory Professionals&#39; Association of Ontario<a class="witness-meetings-link" href="/committees/en/WitnessMeetings?organizationId=27609" title="Committee meetings attended by Medical Laboratory Professionals&#39; Association of Ontario as an individual"><i class="hoc-icon icon-calendar"></i></a></div>
+    <a class="btn btn-brief" href="//www.ourcommons.ca/Content/Committee/441/HESA/Brief/BR11713631/br-external/MedicalLaboratoryProfessionalsAssociationOfOntario-e.pdf" title="Study brief submitted by Medical Laboratory Professionals&#39; Association of Ontario"><i class="hoc-icon icon-notepad"></i>Brief (PDF)</a>
+    
+  <div class="published">Published on: Thursday, April 21, 2022 at 8:23 a.m. (EDT)</div>
+</div>
+
+
+<div class="brief-item">
+    <div class="name">Canadian Association of Occupational Therapists<a class="witness-meetings-link" href="/committees/en/WitnessMeetings?organizationId=3192" title="Committee meetings attended by Canadian Association of Occupational Therapists as an individual"><i class="hoc-icon icon-calendar"></i></a></div>
+      <div class="appeared">Appeared:
+            <span>Monday, March 28, 2022</span>                        <a class="witness-testimony-link" href="/committees/en/Redirects/EvidenceForWitness?ParliamentNumber=44&amp;SessionNumber=1&amp;CommitteeAcronym=HESA&amp;IsJointCommittee=False&amp;MeetingNumber=13&amp;evidencePublicationId=11665600&amp;organizationId=3192" title="Transcript of testimony for Canadian Association of Occupational Therapists"><i class="hoc-icon icon-microphone"></i></a>
+      </div>
+    <a class="btn btn-brief" href="//www.ourcommons.ca/Content/Committee/441/HESA/Brief/BR11709767/br-external/CanadianAssociationOfOccupationalTherapists-e.pdf" title="Study brief submitted by Canadian Association of Occupational Therapists"><i class="hoc-icon icon-notepad"></i>Brief (PDF)</a>
+    
+  <div class="published">Published on: Thursday, April 14, 2022 at 9:51 a.m. (EDT)</div>
+</div>
+
+
+<div class="brief-item">
+    <div class="name">Messier, Cheryl<a class="witness-meetings-link" href="/committees/en/WitnessMeetings?personId=112128" title="Committee meetings attended by Messier, Cheryl as an individual"><i class="hoc-icon icon-calendar"></i></a></div>
+    <a class="btn btn-brief" href="//www.ourcommons.ca/Content/Committee/441/HESA/Brief/BR11693363/br-external/MessierCheryl-e.pdf" title="Study brief submitted by Messier, Cheryl"><i class="hoc-icon icon-notepad"></i>Brief (PDF)</a>
+    
+  <div class="published">Published on: Wednesday, April 6, 2022 at 10:35 a.m. (EDT)</div>
+</div>
+
+
+<div class="brief-item">
+    <div class="name">Spectrum Health Care<a class="witness-meetings-link" href="/committees/en/WitnessMeetings?organizationId=27523" title="Committee meetings attended by Spectrum Health Care as an individual"><i class="hoc-icon icon-calendar"></i></a></div>
+    <a class="btn btn-brief" href="//www.ourcommons.ca/Content/Committee/441/HESA/Brief/BR11674529/br-external/SpectrumHealthCare-e.pdf" title="Study brief submitted by Spectrum Health Care"><i class="hoc-icon icon-notepad"></i>Brief (PDF)</a>
+    
+  <div class="published">Published on: Thursday, March 31, 2022 at 12:32 p.m. (EDT)</div>
+</div>
+
+
+<div class="brief-item">
+    <div class="name">Canadian Physiotherapy Association<a class="witness-meetings-link" href="/committees/en/WitnessMeetings?organizationId=14553" title="Committee meetings attended by Canadian Physiotherapy Association as an individual"><i class="hoc-icon icon-calendar"></i></a></div>
+    <a class="btn btn-brief" href="//www.ourcommons.ca/Content/Committee/441/HESA/Brief/BR11673677/br-external/CanadianPhysiotherapyAssociation-e.pdf" title="Study brief submitted by Canadian Physiotherapy Association"><i class="hoc-icon icon-notepad"></i>Brief (PDF)</a>
+    
+  <div class="published">Published on: Thursday, March 31, 2022 at 9:30 a.m. (EDT)</div>
+</div>
+
+
+<div class="brief-item">
+    <div class="name">Canadian Association of Medical Radiation Technologists<a class="witness-meetings-link" href="/committees/en/WitnessMeetings?organizationId=14554" title="Committee meetings attended by Canadian Association of Medical Radiation Technologists as an individual"><i class="hoc-icon icon-calendar"></i></a></div>
+    <a class="btn btn-brief" href="//www.ourcommons.ca/Content/Committee/441/HESA/Brief/BR11654747/br-external/CanadianAssociationOfMedicalRadiationTechnologists-e.pdf" title="Study brief submitted by Canadian Association of Medical Radiation Technologists"><i class="hoc-icon icon-notepad"></i>Brief (PDF)</a>
+    
+  <div class="published">Published on: Friday, March 25, 2022 at 8:29 a.m. (EDT)</div>
+</div>
+
+
+<div class="brief-item">
+    <div class="name">Canadian Chiropractic Association<a class="witness-meetings-link" href="/committees/en/WitnessMeetings?organizationId=6469" title="Committee meetings attended by Canadian Chiropractic Association as an individual"><i class="hoc-icon icon-calendar"></i></a></div>
+    <a class="btn btn-brief" href="//www.ourcommons.ca/Content/Committee/441/HESA/Brief/BR11643012/br-external/CanadianChiropracticAssociation-e.pdf" title="Study brief submitted by Canadian Chiropractic Association"><i class="hoc-icon icon-notepad"></i>Brief (PDF)</a>
+    
+  <div class="published">Published on: Tuesday, March 22, 2022 at 2:05 p.m. (EDT)</div>
+</div>
+
+
+<div class="brief-item">
+    <div class="name">Neurological Health Charities of Canada<a class="witness-meetings-link" href="/committees/en/WitnessMeetings?organizationId=16407" title="Committee meetings attended by Neurological Health Charities of Canada as an individual"><i class="hoc-icon icon-calendar"></i></a></div>
+    <a class="btn btn-brief" href="//www.ourcommons.ca/Content/Committee/441/HESA/Brief/BR11640956/br-external/NeurologicalHealthCharitiesCanada-e.pdf" title="Study brief submitted by Neurological Health Charities of Canada"><i class="hoc-icon icon-notepad"></i>Brief (PDF)</a>
+    
+  <div class="published">Published on: Tuesday, March 22, 2022 at 8:29 a.m. (EDT)</div>
+</div>
+
+
+<div class="brief-item">
+    <div class="name">Canadian Association of Radiologists<a class="witness-meetings-link" href="/committees/en/WitnessMeetings?organizationId=10912" title="Committee meetings attended by Canadian Association of Radiologists as an individual"><i class="hoc-icon icon-calendar"></i></a></div>
+      <div class="appeared">Appeared:
+            <span>Wednesday, February 16, 2022</span>                        <a class="witness-testimony-link" href="/committees/en/Redirects/EvidenceForWitness?ParliamentNumber=44&amp;SessionNumber=1&amp;CommitteeAcronym=HESA&amp;IsJointCommittee=False&amp;MeetingNumber=8&amp;evidencePublicationId=11584344&amp;organizationId=10912" title="Transcript of testimony for Canadian Association of Radiologists"><i class="hoc-icon icon-microphone"></i></a>
+      </div>
+    <a class="btn btn-brief" href="//www.ourcommons.ca/Content/Committee/441/HESA/Brief/BR11636691/br-external/CanadianAssociationOfRadiologists-e.pdf" title="Study brief submitted by Canadian Association of Radiologists"><i class="hoc-icon icon-notepad"></i>Brief (PDF)</a>
+    
+  <div class="published">Published on: Thursday, March 17, 2022 at 3:00 p.m. (EDT)</div>
+</div>
+
+
+<div class="brief-item">
+    <div class="name">Canadian Health Workforce Network<a class="witness-meetings-link" href="/committees/en/WitnessMeetings?organizationId=27421" title="Committee meetings attended by Canadian Health Workforce Network as an individual"><i class="hoc-icon icon-calendar"></i></a></div>
+      <div class="appeared">Appeared:
+            <span>Wednesday, April 27, 2022</span>                        <a class="witness-testimony-link" href="/committees/en/Redirects/EvidenceForWitness?ParliamentNumber=44&amp;SessionNumber=1&amp;CommitteeAcronym=HESA&amp;IsJointCommittee=False&amp;MeetingNumber=18&amp;evidencePublicationId=11728519&amp;organizationId=27421" title="Transcript of testimony for Canadian Health Workforce Network"><i class="hoc-icon icon-microphone"></i></a>
+      </div>
+    <a class="btn btn-brief" href="//www.ourcommons.ca/Content/Committee/441/HESA/Brief/BR11635918/br-external/CanadianHealthWorkforceNetwork-e.pdf" title="Study brief submitted by Canadian Health Workforce Network"><i class="hoc-icon icon-notepad"></i>Brief (PDF)</a>
+    
+  <div class="published">Published on: Thursday, March 17, 2022 at 8:37 a.m. (EDT)</div>
+</div>
+
+
+<div class="brief-item">
+    <div class="name">Canadian Ophthalmological Society<a class="witness-meetings-link" href="/committees/en/WitnessMeetings?organizationId=2601" title="Committee meetings attended by Canadian Ophthalmological Society as an individual"><i class="hoc-icon icon-calendar"></i></a></div>
+    <a class="btn btn-brief" href="//www.ourcommons.ca/Content/Committee/441/HESA/Brief/BR11634687/br-external/CanadianOphthalmologicalSociety-e.pdf" title="Study brief submitted by Canadian Ophthalmological Society"><i class="hoc-icon icon-notepad"></i>Brief (PDF)</a>
+    
+  <div class="published">Published on: Friday, March 11, 2022 at 1:29 p.m. (EST)</div>
+</div>
+
+
+<div class="brief-item">
+    <div class="name">Canada Fetal Alcohol Spectrum Disorder Research Network<a class="witness-meetings-link" href="/committees/en/WitnessMeetings?organizationId=21176" title="Committee meetings attended by Canada Fetal Alcohol Spectrum Disorder Research Network as an individual"><i class="hoc-icon icon-calendar"></i></a></div>
+    <a class="btn btn-brief" href="//www.ourcommons.ca/Content/Committee/441/HESA/Brief/BR11633580/br-external/CanadaFetalAlcoholSpectrumDisorderResearchNetwork-e.pdf" title="Study brief submitted by Canada Fetal Alcohol Spectrum Disorder Research Network"><i class="hoc-icon icon-notepad"></i>Brief (PDF)</a>
+    
+  <div class="published">Published on: Thursday, March 10, 2022 at 9:49 a.m. (EST)</div>
+</div>
+
+
+<div class="brief-item">
+    <div class="name">Mcgrath, Teri<a class="witness-meetings-link" href="/committees/en/WitnessMeetings?personId=111721" title="Committee meetings attended by Mcgrath, Teri as an individual"><i class="hoc-icon icon-calendar"></i></a></div>
+    <a class="btn btn-brief" href="//www.ourcommons.ca/Content/Committee/441/HESA/Brief/BR11633099/br-external/McgrathTeri-e.pdf" title="Study brief submitted by Mcgrath, Teri"><i class="hoc-icon icon-notepad"></i>Brief (PDF)</a>
+    
+  <div class="published">Published on: Thursday, March 10, 2022 at 8:04 a.m. (EST)</div>
+</div>
+
+
+<div class="brief-item">
+    <div class="name">Canadian Federation of Nurses Unions<a class="witness-meetings-link" href="/committees/en/WitnessMeetings?organizationId=1562" title="Committee meetings attended by Canadian Federation of Nurses Unions as an individual"><i class="hoc-icon icon-calendar"></i></a></div>
+      <div class="appeared">Appeared:
+            <span>Wednesday, February 16, 2022</span>                        <a class="witness-testimony-link" href="/committees/en/Redirects/EvidenceForWitness?ParliamentNumber=44&amp;SessionNumber=1&amp;CommitteeAcronym=HESA&amp;IsJointCommittee=False&amp;MeetingNumber=8&amp;evidencePublicationId=11584344&amp;organizationId=1562" title="Transcript of testimony for Canadian Federation of Nurses Unions"><i class="hoc-icon icon-microphone"></i></a>
+      </div>
+    <a class="btn btn-brief" href="//www.ourcommons.ca/Content/Committee/441/HESA/Brief/BR11621740/br-external/CanadianFederationOfNursesUnions-e.pdf" title="Study brief submitted by Canadian Federation of Nurses Unions"><i class="hoc-icon icon-notepad"></i>Brief (PDF)</a>
+    
+  <div class="published">Published on: Friday, March 4, 2022 at 8:06 a.m. (EST)</div>
+</div>
+
+
+<div class="brief-item">
+    <div class="name">Litt, Nathan<a class="witness-meetings-link" href="/committees/en/WitnessMeetings?personId=111709" title="Committee meetings attended by Litt, Nathan as an individual"><i class="hoc-icon icon-calendar"></i></a></div>
+    <a class="btn btn-brief" href="//www.ourcommons.ca/Content/Committee/441/HESA/Brief/BR11616564/br-external/LittNathan-e.pdf" title="Study brief submitted by Litt, Nathan"><i class="hoc-icon icon-notepad"></i>Brief (PDF)</a>
+    
+  <div class="published">Published on: Thursday, March 3, 2022 at 8:07 a.m. (EST)</div>
+</div>
+
+
+<div class="brief-item">
+    <div class="name">Canadian Association of Social Workers<a class="witness-meetings-link" href="/committees/en/WitnessMeetings?organizationId=13051" title="Committee meetings attended by Canadian Association of Social Workers as an individual"><i class="hoc-icon icon-calendar"></i></a></div>
+    <a class="btn btn-brief" href="//www.ourcommons.ca/Content/Committee/441/HESA/Brief/BR11611368/br-external/CanadianAssociationOfSocialWorkers-e.pdf" title="Study brief submitted by Canadian Association of Social Workers"><i class="hoc-icon icon-notepad"></i>Brief (PDF)</a>
+    
+  <div class="published">Published on: Wednesday, March 2, 2022 at 7:47 a.m. (EST)</div>
+</div>
+
+</div>

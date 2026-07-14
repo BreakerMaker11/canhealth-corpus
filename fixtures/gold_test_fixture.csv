@@ -1,0 +1,9 @@
+doc_id,gold_topic,gold_stakeholder
+fix_pub_001,public_health,physician_org
+fix_pub_002,public_health,physician_org
+fix_pha_001,pharmacare,industry
+fix_men_001,mental_health,patient_advocacy
+fix_men_002,mental_health,individual
+fix_ind_001,indigenous_health,government
+fix_men_007,mental_health,academic
+fix_can_001,cancer,patient_advocacy
