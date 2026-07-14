@@ -10,6 +10,37 @@ only**; modelling code lives in a separate course repo and is synced via
 train/dev splits written.
 
 ---
+## Data sources
+
+### HESA (active)
+
+The [Standing Committee on Health (HESA)](https://www.ourcommons.ca/committees/en/HESA)
+organizes its Work tab by study. For each substantive study the scraper
+collects **Written Briefs** (PDF, stakeholder submissions), the **Committee
+Report** (HTML via DocumentViewer), and the **Government Response** (HTML).
+
+Evidence transcripts, Minutes, Notices of Meeting, and Webcasts are out of
+scope (multi-speaker, no single stakeholder label).
+
+### Deferred (specs retained in CLAUDE.md)
+
+- Open Government Portal consultations (CKAN API)
+- CMA PolicyBase
+- Statistics Canada health analyses
+
+---
+
+## Hard rules (summary)
+
+- **Politeness**: 1 req/sec minimum; back off on 429/403.
+- **Fetch once**: never re-download files already in `data/raw/`.
+- **Raw is immutable**: `data/raw/` is never modified by cleaning code.
+- **Public data only**: no login-walled content, no personal data beyond
+  published organization names.
+- **Gold is frozen**: `gold_test.csv` is hand-made and never regenerated.
+  `label_source=gold` rows are never overwritten by pipeline code.
+
+See `CLAUDE.md` for the full specification.
 
 ## Corpus at a glance
 
@@ -333,34 +364,4 @@ Joint briefs carry `joint: true` and list all orgs separated by ` / `.
 
 ---
 
-## Data sources
 
-### HESA (active)
-
-The [Standing Committee on Health (HESA)](https://www.ourcommons.ca/committees/en/HESA)
-organizes its Work tab by study. For each substantive study the scraper
-collects **Written Briefs** (PDF, stakeholder submissions), the **Committee
-Report** (HTML via DocumentViewer), and the **Government Response** (HTML).
-
-Evidence transcripts, Minutes, Notices of Meeting, and Webcasts are out of
-scope (multi-speaker, no single stakeholder label).
-
-### Deferred (specs retained in CLAUDE.md)
-
-- Open Government Portal consultations (CKAN API)
-- CMA PolicyBase
-- Statistics Canada health analyses
-
----
-
-## Hard rules (summary)
-
-- **Politeness**: 1 req/sec minimum; back off on 429/403.
-- **Fetch once**: never re-download files already in `data/raw/`.
-- **Raw is immutable**: `data/raw/` is never modified by cleaning code.
-- **Public data only**: no login-walled content, no personal data beyond
-  published organization names.
-- **Gold is frozen**: `gold_test.csv` is hand-made and never regenerated.
-  `label_source=gold` rows are never overwritten by pipeline code.
-
-See `CLAUDE.md` for the full specification.
