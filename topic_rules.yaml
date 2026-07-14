@@ -39,19 +39,19 @@ topics:
       - midwifery
 
   - code: mental_health
-    name: Mental health and substance use
+    name: Mental health
     keywords:
       - mental health
       - mental illness
-      - substance use
-      - addiction
+      - psychiatric
+      - mood disorder
+      - anxiety disorder
     strong_keywords:
-      - opioid
-      - overdose
       - suicide prevention
+      - depression
 
   - code: public_health
-    name: Public health and pandemic preparedness
+    name: Public health, pandemic preparedness and substance use
     keywords:
       - public health
       - pandemic
@@ -61,6 +61,10 @@ topics:
       - communicable disease
       - outbreak
       - "re:\\bvaccin"
+      - substance use
+      - addiction
+      - drug policy
+      - toxic drug
     strong_keywords:
       - pandemic preparedness
       - emergency preparedness
@@ -69,6 +73,10 @@ topics:
       - immunisation
       - disease surveillance
       - long covid
+      - opioid
+      - overdose
+      - harm reduction
+      - safe supply
 
   - code: pharmacare
     name: Pharmacare, drugs and medical devices

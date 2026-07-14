@@ -140,3 +140,13 @@ target). Topic distribution: public_health 28.1 %, pharmacare 19.8 %,
 womens_health 16.4 %, mental_health 8.9 %, workforce 5.5 %, indigenous_health
 2.8 %, cancer 2.2 %, childrens_health 2.0 %. Outputs deterministic (run ×2,
 identical counts). Corpus committed as v0.2-corpus.
+
+## Codebook boundary: mental_health vs public_health (2026-07-13)
+
+Substance use, addiction, opioids, overdose, harm reduction, and drug policy
+moved categorically to public_health. Substance-use boundary made categorical
+(→ public_health) after an ask-level test proved too vague to apply
+consistently; codebook, rules, and gold aligned in one pass, pre-freeze.
+mental_health now covers mental illness, mood/anxiety disorders, psychiatric
+services, depression, and suicide prevention only. topic_rules.yaml updated
+accordingly; corpus.csv rebuilt pre-freeze.
