@@ -49,8 +49,20 @@ SIG_TAIL_WORDS  = 200    # strip signature only if fewer words follow
 FASD_DOC = "hesa441_canadas_health_workforce_0018"
 
 LIGATURE_MAP = {
+    # Standard Unicode ligatures (U+FB00–FB06)
     "ﬀ": "ff", "ﬁ": "fi", "ﬂ": "fl",
     "ﬃ": "ffi", "ﬄ": "ffl", "ﬅ": "st", "ﬆ": "st",
+    # PDF font-encoding corruption: glyph tables map ligature glyphs to wrong
+    # Unicode codepoints in Latin Extended-B range (observed in HESA PDFs)
+    "Ɵ": "ti",   # U+019F — most common: "recommendaƟons", "pracƟce"
+    "ƞ": "tf",   # U+019E — "breasƞeeding"
+    "Ʃ": "tt",   # U+01A9 — "aƩract"
+    "ƫ": "tti",  # U+01AB — "geƫng"
+    "Ư": "ff",   # U+01AF — "eƯorts"
+    # Private-Use-Area bullet substitutions (Symbol/Wingdings fonts)
+    "": "•", "": "•",
+    # Bidirectional control characters and zero-width spaces — strip
+    "​": "", "‬": "", "‭": "",
 }
 
 # ── compiled patterns ──────────────────────────────────────────────────────────
@@ -238,9 +250,14 @@ def strip_page_hf(page: str, hf: set[str]) -> tuple[str, int]:
 
 # ── text normalisation ────────────────────────────────────────────────────────
 
+_DIGIT7_RE = re.compile(r"(?<=[a-zA-Z])7(?=[a-zA-Z])")
+
 def fix_ligatures(text: str) -> str:
     for lig, rep in LIGATURE_MAP.items():
         text = text.replace(lig, rep)
+    # "7" used as "ti" ligature in some font encodings (byte 0x37 mapping).
+    # Only replace when flanked by letters — avoids corrupting real numbers.
+    text = _DIGIT7_RE.sub("ti", text)
     return text
 
 
