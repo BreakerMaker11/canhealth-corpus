@@ -76,7 +76,10 @@ label_source`.
 - `card_text` = title + first ~250 words of masked text — the classification
   unit (fits small-model context).
 - `stakeholder_type` from hand-made `org_lookup.csv` (physician_org |
-  patient_advocacy | government | industry | academic).
+  patient_advocacy | government | industry | academic | individual).
+  individual — assigned when the
+  organization field has no org_lookup.csv match and resembles a personal
+  name; never guessed into an organizational category.
 - `topic_seed` from study/consultation title + keyword rules
   (`topic_rules.yaml`). Mark all as `label_source=weak` — trains the model,
   never grades it.
